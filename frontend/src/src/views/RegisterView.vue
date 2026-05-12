@@ -45,7 +45,7 @@
 
 <script setup>
 import { ref, reactive } from "vue";
-import axios from "axios";
+import { registerUser } from "@/services/api";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -60,24 +60,15 @@ const handleRegister = async () => {
   error.value = null;
   success.value = null;
   try {
-    await axios.post(
-      "http://192.168.116.232:8000/api/v1/register",
-      {
-        name: form.name,
-        surname: form.name,
-        email: form.email,
-        password: form.password,
-        role: "producer",
-        avatar_url: "",
-        bio: "",
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      },
-    );
+    await registerUser({
+      name: form.name,
+      surname: form.name,
+      email: form.email,
+      password: form.password,
+      role: "producer",
+      avatar_url: "",
+      bio: "",
+    });
     success.value = "Cuenta creada correctamente. Redirigiendo...";
     setTimeout(() => router.push("/login"), 1500);
   } catch (err) {

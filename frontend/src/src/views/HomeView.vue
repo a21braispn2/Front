@@ -17,7 +17,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import axios from "axios";
+import { getUser, logoutUser } from "@/services/api";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -31,15 +31,7 @@ onMounted(async () => {
     return;
   }
   try {
-    const response = await axios.get(
-      "http://192.168.116.232:8000/api/v1/user",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      },
-    );
+    const response = await getUser();
     user.value = response.data;
   } catch {
     localStorage.removeItem("access_token");
@@ -48,18 +40,8 @@ onMounted(async () => {
 });
 
 const handleLogout = async () => {
-  const token = localStorage.getItem("access_token");
   try {
-    await axios.post(
-      "http://192.168.116.232:8000/api/v1/logout",
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      },
-    );
+    await logoutUser();
   } catch {
     /* ignorar error de logout */
   } finally {

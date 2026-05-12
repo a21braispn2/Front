@@ -35,7 +35,7 @@
 
 <script setup>
 import { ref, reactive } from "vue";
-import axios from "axios";
+import { loginUser } from "@/services/api";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -48,19 +48,9 @@ const handleLogin = async () => {
   loading.value = true;
   error.value = null;
   try {
-    const response = await axios.post(
-      "http://192.168.116.232:8000/api/v1/login",
-      form,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      },
-    );
+    const response = await loginUser(form);
     const token = response.data.access_token || response.data.token;
     localStorage.setItem("access_token", token);
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     router.push("/home");
   } catch (err) {
     error.value =
